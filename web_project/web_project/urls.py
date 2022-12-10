@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from documentation import views as documentations
+from cvss import views as cv
 
 urlpatterns = [
     path('', views.index),
     path('documentation/', documentations.index),
     path('admin/', admin.site.urls),
+    path('cvss/', cv.index),
 ]
