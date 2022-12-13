@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'web_project',
     'documentation',
     'cvss',
+    'tools',
 ]
 
 MIDDLEWARE = [

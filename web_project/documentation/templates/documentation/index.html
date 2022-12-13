@@ -13,12 +13,17 @@
     <nav>
     <h2><a href="/">Dejection</a></h2>
     <ul>
+        <li><a href="/tools/">Tools</a></li>
         <li><a href="/documentation/">Documentation</a></li>
         <li><a href="/cvss/">CVSS</a></li>
     </ul>
     </nav>
 
     <h1>Documentation Page</h1>
-    
+    {% for post in Posts%}
+    <h3>{{post.judul}}</h3>
+    <p>{{post.body}}</p>
+    {% endfor %}
+
 </body>
 </html>

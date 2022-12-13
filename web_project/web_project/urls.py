@@ -18,9 +18,11 @@ from django.urls import path, include
 from . import views
 from documentation import views as documentations
 from cvss import views as cv
+from tools import views as tools
 
 urlpatterns = [
     path('', views.index),
+    path('tools/', tools.index),
     path('documentation/', documentations.index),
     path('admin/', admin.site.urls),
     path('cvss/', cv.index),
