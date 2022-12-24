@@ -6,6 +6,8 @@ class FormField(forms.Form):
         ('xss', 'Cros-site Scripting'),
         ('sqli', 'SQL Injection'),
         ('command', 'Command Injection'),
+        ('xxe', 'XXE Injection'),
+        ('nosql', 'NoSQL Injection'),
     )
     type_attack = forms.ChoiceField(choices = vuln)
     
