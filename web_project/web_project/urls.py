@@ -26,4 +26,5 @@ urlpatterns = [
     path('documentation/', documentations.index),
     path('admin/', admin.site.urls),
     path('cvss/', cv.index),
+    path('tools/result/', tools.createResult)
 ]
