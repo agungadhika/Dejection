@@ -38,7 +38,7 @@
       <th scope="col">Content-length</th>
     </tr>
   </thead>
-  <tbody>
+  <!-- <tbody>
     <tr>
       <th scope="row">1</th>
       <td>{{payload}}</td>
@@ -56,6 +56,13 @@
       <td>Larry</td>
       <td>the Bird</td>
       <td>@twitter</td>
+    </tr>
+  </tbody> -->
+  <tbody>
+    <tr>
+      {% for p in payload %}
+      <td>{{p.payload}}</td>
+      {% endfor %}
     </tr>
   </tbody>
 </table>
