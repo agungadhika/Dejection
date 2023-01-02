@@ -35,8 +35,9 @@ def index(request):
                 for p in xss.objects.all():
                     payload = p.payload
                     submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                    print(submit)
                 payload = xss.objects.all()
-                # print(submit)
+                
             elif(type_attack == "sqli"):
                 for p in sqlinjection.objects.all():
                     payload = p.payload
@@ -47,6 +48,16 @@ def index(request):
                     payload = p.payload
                     submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
                 payload = nosqlinjection.objects.all()
+            elif(type_attack == "xxe"):
+                for p in xxeinjection.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                payload = xxeinjection.objects.all()
+            elif(type_attack == "command"):
+                for p in commandinjection.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                payload = commandinjection.objects.all()
             # result = requests.post(submit, json={"username":"hello", "password":"world"})
             response = requests.post(submit) 
             response_code  = response.status_code
