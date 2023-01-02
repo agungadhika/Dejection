@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect as HRR
-from .models import xss
+from .models import *
 from .forms import FormField
 import requests
 import os
@@ -17,7 +17,7 @@ import re
 #     return render(request, 'tools/index.html',context)
 response_code = ""
 content_length = ""
-payload = ""
+payload = []
 
 def index(request):
     global response_code
@@ -27,15 +27,26 @@ def index(request):
         form_field = FormField(request.POST)
         if (form_field.is_valid()):
             url = form_field.cleaned_data["url_field"]
-            # print(re.sub("\$[a-zA-Z0-9]*\$", url))
             type_attack = form_field.cleaned_data['type_attack']
-            # print(type(type_attack))
+            print(type_attack)
             if(type_attack == 'xss'):
                 # print(xss.objects.values_list("payload"))
-                payload = xss.objects.values("payload").get(id=1)['payload']
-                submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                # payload = xss.objects.values("payload").get(id=1)['payload']
+                for p in xss.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                payload = xss.objects.all()
                 # print(submit)
-            # result = os.system(f'curl -X POST "{submit}"')
+            elif(type_attack == "sqli"):
+                for p in sqlinjection.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                payload = sqlinjection.objects.all()
+            elif(type_attack == "nosql"):
+                for p in nosqlinjection.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                payload = nosqlinjection.objects.all()
             # result = requests.post(submit, json={"username":"hello", "password":"world"})
             response = requests.post(submit) 
             response_code  = response.status_code
@@ -49,5 +60,4 @@ def index(request):
     return render(request, 'tools/index.html', context)
 
 def createResult(request):
-    all_payload = xss.objects.all()
-    return render(request, "tools/tools.html", {"response_code": response_code, "content_length": content_length, "payload": all_payload})
+    return render(request, "tools/tools.html", {"response_code": response_code, "content_length": content_length, "payload": payload})
