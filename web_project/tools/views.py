@@ -49,4 +49,5 @@ def index(request):
     return render(request, 'tools/index.html', context)
 
 def createResult(request):
-    return render(request, "tools/tools.html", {"response_code": response_code, "content_length": content_length, "payload": payload})
+    all_payload = xss.objects.all()
+    return render(request, "tools/tools.html", {"response_code": response_code, "content_length": content_length, "payload": all_payload})
