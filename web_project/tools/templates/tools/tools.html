@@ -38,6 +38,16 @@
       <th scope="col">Content-length</th>
     </tr>
   </thead>
+  <tbody>
+    {% for p in payload %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{p.payload}}</td>
+      <td>{{response_code}}</td>
+      <td>{{content_length}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
   <!-- <tbody>
     <tr>
       <th scope="row">1</th>
@@ -58,13 +68,7 @@
       <td>@twitter</td>
     </tr>
   </tbody> -->
-  <tbody>
-    <tr>
-      {% for p in payload %}
-      <td>{{p.payload}}</td>
-      {% endfor %}
-    </tr>
-  </tbody>
+  
 </table>
     <h1>This is a header</h1>
     <p>Here is the result</p>

@@ -9,3 +9,9 @@ class commandinjection(models.Model):
 
 class sqlinjection(models.Model):
     payload = models.CharField(max_length=255)
+
+class nosqlinjection(models.Model):
+    payload = models.CharField(max_length=255)
+
+class xxeinjection(models.Model):
+    payload = models.CharField(max_length=255)
