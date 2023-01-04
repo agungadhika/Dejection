@@ -55,6 +55,7 @@ def index(request):
                     result.append([payload, status_code, content_length])
                 # payload = xss.objects.all()
                 # print(submit)
+                # payload = xss.objects.all()
             elif(type_attack == "sqli"):
                 for i, p in enumerate(sqlinjection.objects.all()):
                     payload = p.payload
@@ -77,6 +78,16 @@ def index(request):
                     content_length = len(response.content)
                     result.append([payload, status_code, content_length])
                 # payload = nosqlinjection.objects.all()
+            elif(type_attack == "xxe"):
+                for p in xxeinjection.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                # payload = xxeinjection.objects.all()
+            elif(type_attack == "command"):
+                for p in commandinjection.objects.all():
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                # payload = commandinjection.objects.all()
             # result = requests.post(submit, json={"username":"hello", "password":"world"})
             # response = requests.post(submit) 
             # response_code  = response.status_code
