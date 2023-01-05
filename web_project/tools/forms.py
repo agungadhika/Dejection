@@ -10,6 +10,10 @@ class FormField(forms.Form):
         ('nosql', 'NoSQL Injection'),
     )
     type_attack = forms.ChoiceField(choices = vuln)
-    
+    CHOICES = [
+        ("GET", "GET Method"),
+        ("POST", "POST Method")
+    ]
+    attack_method = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
 
     # integer_field = forms.IntegerField()
