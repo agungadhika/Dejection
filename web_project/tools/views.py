@@ -69,7 +69,8 @@ def postMethodView(request):
                     response = s.post(context_data['url'], data=payload[key])
                     status_code = response.status_code
                     content_length = len(response.text)
-                    result.append([payload[key], status_code, content_length])
+                    result.append([pay, status_code, content_length])
+                break
             elif (type_attack == 'sqli'):
                 for p in sqlinjection.objects.all()[:5]:
                     pay = p.payload
@@ -78,7 +79,8 @@ def postMethodView(request):
                     response = s.post(context_data['url'], data=payload[key])
                     status_code = response.status_code
                     content_length = len(response.text)
-                    result.append([payload[key], status_code, content_length])
+                    result.append([pay, status_code, content_length])
+                break
             elif (type_attack == 'command'):
                 for p in commandinjection.objects.all()[:5]:
                     pay = p.payload
@@ -87,7 +89,8 @@ def postMethodView(request):
                     response = s.post(context_data['url'], data=payload[key])
                     status_code = response.status_code
                     content_length = len(response.text)
-                    result.append([payload[key], status_code, content_length])
+                    result.append([pay, status_code, content_length])
+                break
             elif (type_attack == 'xxe'):
                 for p in xxeinjection.objects.all()[:5]:
                     pay = p.payload
@@ -96,7 +99,8 @@ def postMethodView(request):
                     response = s.post(context_data['url'], data=payload[key])
                     status_code = response.status_code
                     content_length = len(response.text)
-                    result.append([payload[key], status_code, content_length])
+                    result.append([pay, status_code, content_length])
+                break
             elif (type_attack == 'nosql'):
                 for p in nosqlinjection.objects.all()[:5]:
                     pay = p.payload
@@ -105,7 +109,8 @@ def postMethodView(request):
                     response = s.post(context_data['url'], data=payload[key])
                     status_code = response.status_code
                     content_length = len(response.text)
-                    result.append([payload[key], status_code, content_length])
+                    result.append([pay, status_code, content_length])
+                break
         return HRR("../result/") 
     return render(request, "tools/post_method.html", context_data)
 
