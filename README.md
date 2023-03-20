@@ -9,6 +9,7 @@
 </ul>
 
 ## Running in Docker
-```docker build -t dejection . 
+```
+docker build -t dejection . 
 docker run --name dejection -p 8005:8005 -d dejection:latest
 ```
