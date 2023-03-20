@@ -82,7 +82,7 @@ def postMethodView(request):
                     result.append([pay, status_code, content_length])
                 break
             elif (type_attack == 'command'):
-                for p in commandinjection.objects.all()[:5]:
+                for p in commandinjection.objects.all():
                     pay = p.payload
                     payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
                     s = createSession(URL)
