@@ -26,6 +26,8 @@ urlpatterns = [
     path('documentation/', documentations.index),
     path('admin/', admin.site.urls),
     path('cvss/', cv.index),
-    # path('tools/result/', tools.createResult),
-    # path('tools/method/post', tools.postMethodView)
+    path('tools/result/', tools.createResult, name="result"),
+    path('tools/loading_info', tools.loading_info, name="loading_info"),
+    path('tools/loading', tools.checkThreadIsAlive, name="check_thread_is_alive"),
+    path('tools/method/post', tools.postMethodView)
 ]

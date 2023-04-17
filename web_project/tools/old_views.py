@@ -33,12 +33,12 @@ def createSession(url):
     s.post(url, data=payload)
     return s
 
-# def findInput(url):
-    # s = createSession(URL)
-    # content = s.get(url).content
-    # soup = bs(content, "html.parser")
-    # input_form = soup.find_all("input")
-    # return [i.get("name") for i in input_form if i.get("name") is not None]
+def findInput(url):
+    s = createSession(URL)
+    content = s.get(url).content
+    soup = bs(content, "html.parser")
+    input_form = soup.find_all("input")
+    return [i.get("name") for i in input_form if i.get("name") is not None]
 
 context_data = {}
 def postMethodValidation(url, type_attack):

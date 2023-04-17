@@ -7,11 +7,14 @@ import requests
 
 def get_request(url: str, payloads: list):
     parsed_text = parser(url, payloads)
-    url_payload = map(requote_uri, parsed_text["url_payload"])
+    url_payload = list(map(requote_uri, parsed_text["url_payload"]))
     result = []
     for index, url in enumerate(url_payload):
         response = requests.get(url)
         status_code = response.status_code
-        content_length = response.headers["Content-Length"]
+        try:
+            content_length = response.headers["Content-Length"]
+        except:
+            content_length = len(response.text)
         result.append([payloads[index], status_code, content_length])
     return result
