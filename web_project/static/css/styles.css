@@ -1,50 +1,15 @@
-/* * {
-    padding: 0;
-    margin: 0;
-  }
-  
-  body {
-    font-family: Arial, Tahoma, Serif;
-    color: #263238;
-  }
-  
-  nav {
-    display: flex;
-    justify-content:space-between; 
-    align-items: center;
-    padding: 1rem 2rem;
-    background: #cfd8dc; 
-  }
-  
-  nav ul {
-    display: flex;
-    list-style: none; 
-  }
-  
-  nav li {
-    padding-left: 1rem; 
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: #0d47a1
-  }
-  form{
-  box-sizing: border-box;
-  padding: 20px 70px 100px 100px;
-  border-radius: 1rem;
-  background-color: hsl(0, 0%, 100%);
-  border: 1px solid hsl(0, 0%, 90%);
-  display: grid;
-  justify-content: center;
-  }
-  input[type=text] {
-    width: 100%;
-    padding: 12px 10px; 
-    }
- select {
-    width: 30%;
-    margin: auto;
-    display: block;
- }
-   */
+label {
+  display: block;
+  text-align: right;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #555;
+}
