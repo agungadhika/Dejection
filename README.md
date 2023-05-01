@@ -6,6 +6,8 @@
   <li>SQL Injection</li>
   <li>Command Injection</li>
   <li>Cross Site-Scripting</li>
+  <li>XXE Injection</li>
+  <li>NoSQL Injection</li>
 </ul>
 
 ## Running in Docker
