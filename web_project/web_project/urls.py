@@ -29,5 +29,7 @@ urlpatterns = [
     path('tools/result/', tools.createResult, name="result"),
     path('tools/loading_info', tools.loading_info, name="loading_info"),
     path('tools/loading', tools.checkThreadIsAlive, name="check_thread_is_alive"),
-    path('tools/method/post', tools.postMethodView)
+    path('tools/method/post', tools.postMethodView),
+    # path('beta_tools/', tools.beta_tools, name='beta_tools'),
+    # path('beta_tools/download_pdf/', tools.download_pdf, name='download_pdf'),
 ]

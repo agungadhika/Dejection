@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect as HRR, JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect as HRR, JsonResponse, HttpResponse, FileResponse
 from .models import xss, commandinjection, sqlinjection, xxeinjection, nosqlinjection
 from .forms import FormField
 from .utils.get_request import get_request
@@ -9,9 +9,43 @@ from bs4 import BeautifulSoup as bs
 import re
 from requests.utils import requote_uri
 import requests
+# from reportlab.pdfgen import canvas
+# from reportlab.lib.pagesizes import letter
+# from django.template.loader import get_template
+# from django.template import Context
+# from xhtml2pdf import pisa
 
 results = []
 threads = None
+# def beta_tools(request):
+#     context = {
+#         'result': results
+#     }
+
+#     return render(request, 'beta_tools.html', context)
+
+# def download_pdf(request):
+#     # logic untuk mengambil data dari request dan melakukan operasi pada data tersebut
+#     # ...
+
+#     context = {
+#         'result': results
+#     }
+
+#     # render template dan ubah ke dalam bentuk HTML
+#     template = get_template('beta_tools.html')
+#     html = template.render(context)
+
+#     # ubah HTML menjadi PDF
+#     response = io.BytesIO()
+#     pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), response)
+#     if not pdf.err:
+#         response = HttpResponse(response.getvalue(), content_type='application/pdf')
+#         response['Content-Disposition'] = 'attachment; filename="beta_tools.pdf"'
+#         return response
+#     else:
+#         return HttpResponse("Error rendering PDF", status=400)
+
 def get_view(url: str, type_attack: str):
     global results
     if (len(results) > 0):

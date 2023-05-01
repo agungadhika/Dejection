@@ -5,9 +5,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading</title>
+    <style>
+    body {
+      background-color: #1b1b1b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .loader {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .loader div {
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border: 8px solid #fff;
+      border-radius: 50%;
+      animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      border-color: #fff transparent transparent transparent;
+    }
+    .loader div:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    .loader div:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    .loader div:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+    @keyframes loader {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    p {
+      font-size: 24px;
+      color: #fff;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
-    <p id="loading_status">Still Loading</p>
+<div class="loader">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <!-- <p>Mohon Menunggu...</p> -->
+    <p id="loading_status">Processing..</p>
     <script>
         myInterval = setInterval(function(){
             var xhr = new XMLHttpRequest();
