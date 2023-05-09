@@ -17,12 +17,14 @@ import requests
 
 results = []
 threads = None
+
 # def beta_tools(request):
 #     context = {
 #         'result': results
 #     }
 
 #     return render(request, 'beta_tools.html', context)
+
 
 # def download_pdf(request):
 #     # logic untuk mengambil data dari request dan melakukan operasi pada data tersebut
@@ -45,6 +47,8 @@ threads = None
 #         return response
 #     else:
 #         return HttpResponse("Error rendering PDF", status=400)
+
+
 
 def get_view(url: str, type_attack: str):
     global results
