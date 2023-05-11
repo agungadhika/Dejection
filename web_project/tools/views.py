@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup as bs
 import re
 from requests.utils import requote_uri
 import requests
+
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.pagesizes import letter
 # from django.template.loader import get_template
@@ -26,52 +27,46 @@ threads = None
 #     return render(request, 'beta_tools.html', context)
 
 
-# def download_pdf(request):
-#     # logic untuk mengambil data dari request dan melakukan operasi pada data tersebut
-#     # ...
-
-#     context = {
-#         'result': results
-#     }
-
-#     # render template dan ubah ke dalam bentuk HTML
-#     template = get_template('beta_tools.html')
-#     html = template.render(context)
-
-#     # ubah HTML menjadi PDF
-#     response = io.BytesIO()
-#     pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), response)
-#     if not pdf.err:
-#         response = HttpResponse(response.getvalue(), content_type='application/pdf')
-#         response['Content-Disposition'] = 'attachment; filename="beta_tools.pdf"'
-#         return response
-#     else:
-#         return HttpResponse("Error rendering PDF", status=400)
-
-
+URL = "http://47.245.99.142/login.php"
+host_up = True
+def hostDown(request):
+    return render(request, "tools/host_down.html")
 
 def get_view(url: str, type_attack: str):
     global results
+    global host_up
     if (len(results) > 0):
         results.clear()
-    if(type_attack == "xss"):
-        result = get_request(url, list(xss.objects.values_list('payload', flat=True)))
-    elif(type_attack == "sqli"):
-        result = get_request(url, list(sqlinjection.objects.values_list('payload', flat=True)))
-    elif(type_attack == "xxe"):
-        result = get_request(url, list(xxeinjection.objects.values_list('payload', flat=True)))
-    elif(type_attack == "command"):
-        result = get_request(url, list(commandinjection.objects.values_list('payload', flat=True)))
-    elif(type_attack == "nosql"):
-        result = get_request(url, list(nosqlinjection.objects.values_list('payload', flat=True)))
-    
+    try:
+        if(type_attack == "xss"):
+            result = get_request(url, list(xss.objects.values_list('payload', flat=True)))
+        elif(type_attack == "sqli"):
+            result = get_request(url, list(sqlinjection.objects.values_list('payload', flat=True)))
+        elif(type_attack == "xxe"):
+            result = get_request(url, list(xxeinjection.objects.values_list('payload', flat=True)))
+        elif(type_attack == "command"):
+            result = get_request(url, list(commandinjection.objects.values_list('payload', flat=True)))
+        elif(type_attack == "nosql"):
+            result = get_request(url, list(nosqlinjection.objects.values_list('payload', flat=True)))
+    except Exception as e:
+        print(e)
+        host_up = False
+        return
     results = result
 
+def createSession(url):
+    s = requests.Session()
+    soup = bs(s.get(url).content, "html.parser")
+    hidden = soup.find("input", type="hidden")
+    token = hidden.get("value")
+    payload = {"username": "admin", "password": "password", "Login":"Login", "user_token": token}
+    s.post(url, data=payload)
+    return s
 
 def findInput(url):
-    # s = createSession(URL)
-    # content = s.get(url).content
-    content = requests.get(url).content
+    s = createSession(URL)
+    content = s.get(url).content
+    # content = requests.get(url).content
     soup = bs(content, "html.parser")
     input_form = soup.find_all("input")
     return [i.get("name") for i in input_form if i.get("name") is not None]
@@ -221,4 +216,6 @@ def checkThreadIsAlive(request):
     return render(request, "tools/loading.html")
 
 def loading_info(request):
+    if (host_up == False):
+        return HttpResponse("host is down")
     return HttpResponse(threads.is_alive())

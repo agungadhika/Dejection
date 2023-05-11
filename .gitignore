@@ -1,2 +1,4 @@
 .venv/*
 web_project/.venv/*
+*/__pycache__/*
+__pycache__/*

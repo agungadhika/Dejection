@@ -80,6 +80,11 @@
                     window.location.replace("/tools/result");
                     clearInterval(myInterval);
                 }
+                else if (xhr.responseText === "host is down")
+                {
+                  window.location.replace("/tools/host_down");
+                  clearInterval(myInterval);
+                }
                 console.log(xhr.responseText);
               }
             };
