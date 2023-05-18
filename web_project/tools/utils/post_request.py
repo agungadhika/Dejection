@@ -1,31 +1,42 @@
 import requests
 from .parse import postParser
 # from parse import postParser
+# from ..models import xss
 from requests.utils import requote_uri
 from bs4 import BeautifulSoup as bs4
 import re
 
 
-def createSession(url):
+URL = "http://47.245.99.142/login.php"
+
+def createSession(url, username="admin", password="password"):
     s = requests.Session()
-    soup = bs(s.get(url).content, "html.parser")
+    soup = bs4(s.get(url).content, "html.parser")
     hidden = soup.find("input", type="hidden")
     token = hidden.get("value")
-    payload = {"username": "admin", "password": "password", "Login":"Login", "user_token": token}
+    payload = {"username": username, "password": password, "Login":"Login", "user_token": token}
     s.post(url, data=payload)
     return s
 
-def findInput(url):
+def findInput(url, session = None):
     # s = createSession(URL)
     # content = s.get(url).content
-    content = requests.get(url).content
+    if (session is not None):
+        content = session.get(url).content
+    else:
+        content = requests.get(url).content
     soup = bs4(content, "html.parser")
     input_form = soup.find_all("input")
     return [i.get("name") for i in input_form if i.get("name") is not None]
 
-def post_validation(url: str, type_attack: str):
+def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
     context_data = {}
-    input_id = findInput(url) # type list
+    if (login_dvwa):
+        session = createSession(URL)
+        input_id = findInput(url, session)
+    else:
+        input_id = findInput(url) # type list
+    
     context_data = {
         "url": url,
         "input_id": input_id,
@@ -45,7 +56,6 @@ def post_request(url: str, payloads: list, data: dict):
     # initial_data = {"ie": "", "gl": "$$"}
 
     # data = [{"ie": payload1, "hl": "a", "h3": "b"}, {"ie": payload2, "hl": "a", "h3": "b"}]
-    # requests.post(url, data=data)
     current_data = data.copy()
     for key, value in data.items():
         if (re.search("\$(.*?)\$", value) != None):
@@ -54,7 +64,7 @@ def post_request(url: str, payloads: list, data: dict):
     
     processed_data = []
     for key, value in current_data.items():
-        if (len(value) > 1):
+        if (len(value) > 1 and isinstance(value, list)):
             for item in value:
                 initial_data = data.copy()
                 initial_data[key] = item
@@ -68,7 +78,9 @@ def post_request(url: str, payloads: list, data: dict):
             content_length = response.headers["Content-Length"]
         except:
             content_length = len(response.text)
+        
         result.append([payloads[index], status_code, content_length]) 
+    print(len(processed_data), len(payloads))
     return result
 
-# print(post_request("http://gaggle.com", ["good payload", "great payload", "wonderful payload"], {"ie": "$$", "hl": "a", "h3": "b"}))
+# post_request("http://google.com", ["<script>alert('123')</script>", '-prompt(8)-', "'-prompt(8)-'", '";a=prompt,a()//', "';a=prompt,a()//", '\'-eval("window[\'pro\'%2B\'mpt\'](8)")-\'', '-eval("window[\'pro\'%2B\'mpt\'](8)")-', '"onclick=prompt(8)>"@x.y', '"onclick=prompt(8)><svg/onload=prompt(8)>"@x.y'], {"data": "data", "d": "$$"})
