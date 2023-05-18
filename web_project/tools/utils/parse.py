@@ -11,3 +11,9 @@ def parser(url: str, payloads: list):
     for payload in payloads:
         text_list.append(re.sub("\$(.*?)\$", payload, url))
     return {"url_payload": text_list}
+
+def postParser(data: str, payloads: list):
+    text_list = []
+    for payload in payloads:
+        text_list.append(re.sub("\$(.*?)\$", payload, data))
+    return text_list
