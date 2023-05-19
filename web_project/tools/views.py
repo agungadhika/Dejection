@@ -48,20 +48,11 @@ def get_view(url: str, type_attack: str):
         return
     results = result
 
-
-# def postMethodValidation(url, type_attack):
-    # input_id = findInput(url)
-    # global context_data
-    # context_data = {
-        # "url": url,
-        # "input_id": input_id,
-        # "type_attack" : type_attack
-    # }
-
 def postMethodValidation(request):
+    global threads
     url = request.session["url"]
     type_attack = request.session["type_attack"]
-    context_data = post_validation(url, type_attack)
+    context_data = post_validation(url, type_attack, login_dvwa = True)
     
     if (request.method == "GET"):
         return render(request, "tools/post_method.html", context=context_data)
@@ -71,117 +62,30 @@ def postMethodValidation(request):
         
         threads = Thread(target = postMethodView, args=(url, type_attack, data))
         threads.start()
+        print(xss.objects.values_list("payload", flat=True))
         return redirect('check_thread_is_alive')
-        # postMethodView(request)
+
+def deleteEmptyString(payload_list):
+    result = [r for r in payload_list if r != ""]
+    return result
 
 def postMethodView(url, type_attack, data):
     global results
-    # url = request.session["url"]
-    # type_attack = request.session["type_attack"]
-    # context_data = post_validation(url, type_attack)
-    
-    # if (request.method == "GET"):
-        # return render(request, "tools/post_method.html", context=context_data)
-
-    
-    # data = request.POST.dict()
-    # data.pop("csrfmiddlewaretoken", None) # removing the csrfmiddlewaretokens
-    
     if(len(results) > 0):
         results.clear()
     
     if(type_attack == "xss"):
-        result = post_request(url, list(xss.objects.values_list('payload', flat=True)), data)
+        result = post_request(url, deleteEmptyString(list(xss.objects.values_list('payload', flat=True))), data)
     elif(type_attack == "sqli"):
-        result = post_request(url, list(sqlinjection.objects.values_list('payload', flat=True)), data)
+        result = post_request(url, deleteEmptyString(list(sqlinjection.objects.values_list('payload', flat=True))), data)
     elif(type_attack == "xxe"):
-        result = post_request(url, list(xxeinjection.objects.values_list('payload', flat=True)), data)
+        result = post_request(url, deleteEmptyString(list(xxeinjection.objects.values_list('payload', flat=True))), data)
     elif(type_attack == "command"):
-        result = post_request(url, list(commandinjection.objects.values_list('payload', flat=True)), data)
+        result = post_request(url, deleteEmptyString(list(commandinjection.objects.values_list('payload', flat=True))), data)
     elif(type_attack == "nosql"):
-        result = post_request(url, list(nosqlinjection.objects.values_list('payload', flat=True)), data)
+        result = post_request(url, deleteEmptyString(list(nosqlinjection.objects.values_list('payload', flat=True))), data)
     
     results = result
-
-# def postMethodView(request):
-    # global results
-    # input_id = context_data["input_id"]
-    # type_attack = context_data["type_attack"]
-    # payload = {}
-    # if (len(results) > 0):
-        # results.clear()
-    # if request.method == 'POST':
-        # for key, value in request.POST.items():
-            # payload[key] = value
-        # for key, val in payload.items():
-            # if (type_attack == 'xss'):
-                # for p in xss.objects.all():
-                    # pay = p.payload
-                    # payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
-                    # # s = createSession(URL)
-                    # response = s.post(context_data['url'], data=payload[key])
-                    # status_code = response.status_code
-                    # try:
-                        # content_length = response.headers["Content-Length"]
-                    # except:
-                        # content_length = len(response.text)
-                    # results.append([pay, status_code, content_length])
-                # break
-            # elif (type_attack == 'sqli'):
-                # for p in sqlinjection.objects.all():
-                    # pay = p.payload
-                    # payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
-                    # # s = createSession(URL)
-
-                    # # response = requests.post(context_data['url'], data=payload[key])
-                    # # status_code = response.status_code
-                    # # try:
-                        # # content_length = response.headers["Content-Length"]
-                    # # except:
-                        # # content_length = len(response.text)
-                    # # results.append([pay, status_code, content_length])
-                # # break
-            # # elif (type_attack == 'command'):
-                # # for p in commandinjection.objects.all():
-                    # # pay = p.payload
-                    # payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
-                    # # s = createSession(URL)
-                    # response = requests.post(context_data['url'], data=payload[key])
-                    # status_code = response.status_code
-                    # try:
-                        # content_length = response.headers["Content-Length"]
-                    # except:
-                        # content_length = len(response.text)
-                    # results.append([pay, status_code, content_length])
-                # break
-            # elif (type_attack == 'xxe'):
-                # for p in xxeinjection.objects.all():
-                    # pay = p.payload
-                    # payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
-                    # # s = createSession(URL)
-                    # response = s.post(context_data['url'], data=payload[key])
-                    # status_code = response.status_code
-                    # try:
-                        # content_length = response.headers["Content-Length"]
-                    # except:
-                        # content_length = len(response.text)
-                    # results.append([pay, status_code, content_length])
-                # break
-            # elif (type_attack == 'nosql'):
-                # for p in nosqlinjection.objects.all():
-                    # pay = p.payload
-                    # payload[key] = re.sub("\$[a-zA-Z0-9]*\$", pay, val)
-                    # # s = createSession(URL)
-                    # response = s.post(context_data['url'], data=payload[key])
-                    # status_code = response.status_code
-                    # try:
-                        # content_length = response.headers["Content-Length"]
-                    # except:
-                        # content_length = len(response.text)
-                    # results.append([pay, status_code, content_length])
-                # break
-        # return HRR("../result/") 
-    # return render(request, "tools/post_method.html", context_data)
 
 def index(request):
     global threads
