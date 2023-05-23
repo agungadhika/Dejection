@@ -29,19 +29,20 @@ def hostDown(request):
 def get_view(url: str, type_attack: str):
     global results
     global host_up
+    login_dvwa = True
     if (len(results) > 0):
         results.clear()
     try:
         if(type_attack == "xss"):
-            result = get_request(url, list(xss.objects.values_list('payload', flat=True)))
+            result = get_request(url, list(xss.objects.values_list('payload', flat=True)), login_dvwa = login_dvwa)
         elif(type_attack == "sqli"):
-            result = get_request(url, list(sqlinjection.objects.values_list('payload', flat=True)))
+            result = get_request(url, list(sqlinjection.objects.values_list('payload', flat=True)), login_dvwa = login_dvwa)
         elif(type_attack == "xxe"):
-            result = get_request(url, list(xxeinjection.objects.values_list('payload', flat=True)))
+            result = get_request(url, list(xxeinjection.objects.values_list('payload', flat=True)), login_dvwa = login_dvwa)
         elif(type_attack == "command"):
-            result = get_request(url, list(commandinjection.objects.values_list('payload', flat=True)))
+            result = get_request(url, list(commandinjection.objects.values_list('payload', flat=True)), login_dvwa = login_dvwa)
         elif(type_attack == "nosql"):
-            result = get_request(url, list(nosqlinjection.objects.values_list('payload', flat=True)))
+            result = get_request(url, list(nosqlinjection.objects.values_list('payload', flat=True)), login_dvwa = login_dvwa)
     except Exception as e:
         print(e)
         host_up = False
@@ -71,19 +72,21 @@ def deleteEmptyString(payload_list):
 
 def postMethodView(url, type_attack, data):
     global results
+    login_dvwa = True
+
     if(len(results) > 0):
         results.clear()
     
     if(type_attack == "xss"):
-        result = post_request(url, deleteEmptyString(list(xss.objects.values_list('payload', flat=True))), data)
+        result = post_request(url, deleteEmptyString(list(xss.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
     elif(type_attack == "sqli"):
-        result = post_request(url, deleteEmptyString(list(sqlinjection.objects.values_list('payload', flat=True))), data)
+        result = post_request(url, deleteEmptyString(list(sqlinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
     elif(type_attack == "xxe"):
-        result = post_request(url, deleteEmptyString(list(xxeinjection.objects.values_list('payload', flat=True))), data)
+        result = post_request(url, deleteEmptyString(list(xxeinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
     elif(type_attack == "command"):
-        result = post_request(url, deleteEmptyString(list(commandinjection.objects.values_list('payload', flat=True))), data)
+        result = post_request(url, deleteEmptyString(list(commandinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
     elif(type_attack == "nosql"):
-        result = post_request(url, deleteEmptyString(list(nosqlinjection.objects.values_list('payload', flat=True))), data)
+        result = post_request(url, deleteEmptyString(list(nosqlinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
     
     results = result
 
