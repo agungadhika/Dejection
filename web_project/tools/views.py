@@ -9,17 +9,16 @@ from bs4 import BeautifulSoup as bs
 import re
 from requests.utils import requote_uri
 import requests
-from .utils.post_request import post_validation, post_request
+from .utils.post_request import post_validation, post_request, URL
 
 # post method multiprocessing
 # login DVWA and do post and get request there
 
-
 results = []
 threads = None
+login_dvwa = True
 
-
-URL = "http://47.245.99.142/login.php"
+URL = URL
 host_up = True
 context_data = {}
 
@@ -29,7 +28,7 @@ def hostDown(request):
 def get_view(url: str, type_attack: str):
     global results
     global host_up
-    login_dvwa = True
+    # login_dvwa = True
     if (len(results) > 0):
         results.clear()
     try:
@@ -51,9 +50,10 @@ def get_view(url: str, type_attack: str):
 
 def postMethodValidation(request):
     global threads
+    # login_dvwa = False 
     url = request.session["url"]
     type_attack = request.session["type_attack"]
-    context_data = post_validation(url, type_attack, login_dvwa = True)
+    context_data = post_validation(url, type_attack, login_dvwa = login_dvwa)
     
     if (request.method == "GET"):
         return render(request, "tools/post_method.html", context=context_data)
@@ -63,7 +63,7 @@ def postMethodValidation(request):
         
         threads = Thread(target = postMethodView, args=(url, type_attack, data))
         threads.start()
-        print(xss.objects.values_list("payload", flat=True))
+        # print(xss.objects.values_list("payload", flat=True))
         return redirect('check_thread_is_alive')
 
 def deleteEmptyString(payload_list):
@@ -72,7 +72,7 @@ def deleteEmptyString(payload_list):
 
 def postMethodView(url, type_attack, data):
     global results
-    login_dvwa = True
+    # login_dvwa = False
 
     if(len(results) > 0):
         results.clear()
@@ -112,9 +112,6 @@ def index(request):
             return redirect('check_thread_is_alive')
         
         elif (attack_method == "POST"): 
-            # postMethodValidation(url, type_attack)
-            # return HRR('method/post')
-            # threads = Thread(target=postMethodView)
             return redirect('post_validation')
 
 def createResult(request):
