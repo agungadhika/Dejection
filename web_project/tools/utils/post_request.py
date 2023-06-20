@@ -36,13 +36,24 @@ def findInput(url, session = None):
     input_form = soup.find_all("input")
     return [i.get("name") for i in input_form if i.get("name") is not None]
 
+def findSelect(url, session = None):
+    if (session is not None): 
+        content = session.get(url).content
+    else:
+        content = requests.get(url).content
+    soup = bs4(content, "html.parser")
+    select_form = soup.find_all("select")
+    return [i.get("name") for i in select_form if i.get("name") is not None]
+
 def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
     context_data = {}
     if (login_dvwa):
         session = createSessionBwapp(URL)
         input_id = findInput(url, session)
+        input_id += findSelect(url, session)
     else:
         input_id = findInput(url) # type list
+        input_id += findSelect(url)
     
     context_data = {
         "url": url,
