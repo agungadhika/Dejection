@@ -16,7 +16,7 @@ from .utils.post_request import post_validation, post_request, URL
 
 results = []
 threads = None
-login_dvwa = True
+login_dvwa = False
 
 URL = URL
 host_up = True
