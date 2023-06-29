@@ -86,7 +86,7 @@ def postMethodView(url, type_attack, data):
     elif(type_attack == "command"):
         result = post_request(url, deleteEmptyString(list(commandinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
     elif(type_attack == "nosql"):
-        result = post_request(url, deleteEmptyString(list(nosqlinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa)
+        result = post_request(url, deleteEmptyString(list(nosqlinjection.objects.values_list('payload', flat=True))), data, login_dvwa = login_dvwa, json_encode = True)
     
     results = result
 
