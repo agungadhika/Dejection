@@ -6,23 +6,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css'%}">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
 </head>
 <body>
-    <!-- <img style="width:10%"src="{% static 'img/dejection.jpg'%}" alt=""> -->
-    <nav>
-    <h2><a href="/">Dejection</a></h2>
-    <ul>
-        <li><a href="/tools/">Tools</a></li>
-        <li><a href="/documentation/">Documentation</a></li>
-        <li><a href="/cvss/">CVSS</a></li>
-    </ul>
-    </nav>
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+  <!-- <a href="/"><img src="{% static "img/logoatas.png"%}" style="width:20%"></a> -->
+    <a class="navbar-brand" href="/">Dejection</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/tools/">Tools</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/documentation/">Documentation</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-    <h1>Documentation Page</h1>
+    <div class="container">
+    <div style="text-align:center">
+      <img src="{% static "img/logoatas.png"%}" style="width:35%">
+</div>
+    <h1>Cara Penggunaan Tools</h1>
     {% for post in Posts%}
     <h3>{{post.judul}}</h3>
-    <p>{{post.body}}</p>
+    <h5>{{post.body}}</h5>
     {% endfor %}
 
 </body>
