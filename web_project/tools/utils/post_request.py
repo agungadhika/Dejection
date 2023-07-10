@@ -6,7 +6,7 @@ from .parse import postParser
 from urllib.parse import quote as requote_uri
 from bs4 import BeautifulSoup as bs4
 import re
-from typing import List
+from typing import List, Dict, Any
 
 URL = "https://bwapp.hakhub.net/login.php"
 
@@ -25,7 +25,7 @@ def createSessionBwapp(url, username="ikantongkol", password="hacker", security_
     s.post(url, data=payload)
     return s
 
-def findInput(url, session = None):
+def findInput(url: str, session = None):
     # s = createSessionBwapp(URL)
     # content = s.get(url).content
     if (session is not None):
@@ -36,7 +36,7 @@ def findInput(url, session = None):
     input_form = soup.find_all("input")
     return [i.get("name") for i in input_form if i.get("name") is not None]
 
-def findSelect(url, session = None):
+def findSelect(url: str, session = None) -> List[str]:
     if (session is not None): 
         content = session.get(url).content
     else:
@@ -64,7 +64,7 @@ def post_validation(url: str, type_attack: str, login_dvwa: bool = False):
 
 # post request -> url, payloads, data (x-urlformencoded)
 
-def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False, json_encode: bool = False) -> List[List]:
+def post_request(url: str, payloads: list, data: Dict[str, str], login_dvwa: bool = False, json_encode: bool = False) -> List[List]:
     if (login_dvwa):
         session = createSessionBwapp(URL)
     else:
@@ -104,7 +104,44 @@ def post_request(url: str, payloads: list, data: dict, login_dvwa: bool = False,
         status_code = 0
     return result
 
-
+def post_request_nosql(url: str, payloads: list, data: Dict[Any, Any], login_dvwa: bool = False, json_encode: bool = False) -> List[List]:
+    if (login_dvwa):
+        session = createSessionBwapp(URL)
+    else:
+        session = requests
+    if (json_encode):
+        content_type = "application/json"
+    else:
+        content_type = "application/x-www-form-urlencoded"
+    str_data = list(data.values())[0]
+    headers = {"Content-Type": content_type}
+    result = []
+    if (re.search(r"\$(.*?)\$", str_data) != None):
+        parsed_data = postParser(str_data, payloads)
+    else:
+        parsed_data = str_data
+        response = session.post(url, data = parsed_data, headers=headers)
+        status_code = response.status_code
+        try:
+            content_length = response.headers["Content-Length"]
+        except:
+            content_length = len(response.text)
+        result.append([parsed_data, status_code, content_length]) 
+        content_length = "0"
+        status_code = 0
+        return result
+    for index, payload_data in enumerate(parsed_data):
+        response = session.post(url, data = payload_data, headers=headers)
+        status_code = response.status_code
+        try:
+            content_length = response.headers["Content-Length"]
+        except:
+            content_length = len(response.text)
+        
+        result.append([payloads[index], status_code, content_length]) 
+        content_length = "0"
+        status_code = 0
+    return result
 if __name__ == "__main__":
     payload = """
     {"$ne": "foo"}

@@ -4,6 +4,7 @@
 # return results
 import re
 from urllib.parse import quote_plus
+from typing import List
 def parser(url: str, payloads: list):
     text_list = []
     port = None
@@ -13,7 +14,7 @@ def parser(url: str, payloads: list):
         text_list.append(re.sub("\$(.*?)\$", quote_plus(payload), url))
     return {"url_payload": text_list}
 
-def postParser(data: str, payloads: list):
+def postParser(data: str, payloads: list) -> List[str]:
     text_list = []
     for payload in payloads:
         text_list.append(re.sub("\$(.*?)\$", payload, data))
